@@ -42,9 +42,8 @@ jobs:
     - name: Sync Source Code Official Mode
       run: |
         cd lineage
-        # Запускаем официальное скачивание. Теперь оно проскочит без сетевых сбоев!
-        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
-
+        # Вызываем локальный repo напрямую по его точному адресу
+        ~/bin/repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Apply Custom Code Modifications
       run: |
