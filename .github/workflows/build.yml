@@ -39,20 +39,12 @@ jobs:
         mkdir -p .repo/local_manifests
         cp ../custom_config/manifest.xml .repo/manifest.xml
 
-    - name: Sync Source Code via Pure Git
+    - name: Sync Source Code Official Mode
       run: |
         cd lineage
-        # Скачиваем фреймворк напрямую через Git, используя данные из твоего манифеста
-        git clone --depth=1 https://github.com -b lineage-23.2 frameworks/base
-        git clone --depth=1 https://github.com -b lineage-23.2 build/make
-        
-        # Скачиваем железо для Samsung S10
-        git clone --depth=1 https://github.com -b lineage-23.2 device/samsung/beyond1lte
-        git clone --depth=1 https://github.com -b lineage-23.2 device/samsung/exynos9820-common
-        git clone --depth=1 https://github.com -b lineage-23.2 kernel/samsung/exynos9820
-        git clone --depth=1 https://github.com -b lineage-23.2 vendor/samsung/beyond1lte
-        git clone --depth=1 https://github.com -b lineage-23.2 vendor/samsung/exynos9820-common
-        git clone --depth=1 https://github.com -b lineage-23.2 hardware/samsung
+        # Запускаем официальное скачивание. Теперь оно проскочит без сетевых сбоев!
+        repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
+
 
     - name: Apply Custom Code Modifications
       run: |
