@@ -60,9 +60,15 @@ jobs:
     - name: Start Build
       run: |
         cd lineage
+        # Создаем правильный путь для скрипта envsetup.sh
+        mkdir -p build
+        ln -sf make/core/envsetup.sh build/envsetup.sh
+        
+        # Запуск официальной компиляции Android 16
         source build/envsetup.sh
         breakfast beyond1lte
         brunch beyond1lte
+
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
