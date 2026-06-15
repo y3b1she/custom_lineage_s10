@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Плитки стали круглыми (для квадрата 56x56 радиус 28 делает его кругом) -->
+    <!-- Если ваша прошивка поддерживает Squircle-эффект, 24dp-28dp будет идеальным решением -->
+    <dimen name="qs_corner_radius">28dp</dimen>
+    
+    <!-- Базовый размер иконки iOS 18 стал компактнее и аккуратнее -->
+    <dimen name="qs_tile_height">56dp</dimen>
+    
+    <!-- В iOS 18 сетка элементов стала плотнее, отступы уменьшились -->
+    <dimen name="qs_tile_margin_vertical">6dp</dimen>
+    <dimen name="qs_tile_margin_horizontal">6dp</dimen>
+    
+    <!-- Уведомления в iOS далеко не доходят до краев экрана, отступы стали больше -->
+    <dimen name="notification_side_paddings">16dp</dimen>
+</resources>
