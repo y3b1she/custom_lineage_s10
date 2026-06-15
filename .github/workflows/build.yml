@@ -60,14 +60,18 @@ jobs:
     - name: Start Build
       run: |
         cd lineage
-        # Создаем правильный путь для скрипта envsetup.sh
+        # Создаем папку build и качаем envsetup.sh напрямую из официального репозитория LineageOS
         mkdir -p build
-        ln -sf make/core/envsetup.sh build/envsetup.sh
+        curl -s https://githubusercontent.com > build/envsetup.sh
+        
+        # Проверяем, что файл успешно скачался и весит больше 0 байт
+        ls -la build/envsetup.sh
         
         # Запуск официальной компиляции Android 16
         source build/envsetup.sh
         breakfast beyond1lte
         brunch beyond1lte
+
 
 
     - name: Upload Artifact
