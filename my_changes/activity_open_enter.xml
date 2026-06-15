@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://android.com" 
+     android:shareInterpolator="false" 
+     android:zAdjustment="top">
+    
+    <!-- Проявление из прозрачности происходит быстрее, чем сам зум -->
+    <alpha 
+        android:fromAlpha="0.0" 
+        android:toAlpha="1.0" 
+        android:duration="200" 
+        android:interpolator="@android:anim/decelerate_interpolator" />
+    
+    <!-- Зум с эффектом iOS: сильный толчок из центра и очень мягкое замедление -->
+    <scale 
+        android:fromXScale="0.88" 
+        android:toXScale="1.0" 
+        android:fromYScale="0.88" 
+        android:toYScale="1.0" 
+        android:pivotX="50.0%" 
+        android:pivotY="50.0%" 
+        android:duration="380" 
+        android:controlX1="0.1" 
+        android:controlY1="1.0" 
+        android:controlX2="0.2" 
+        android:controlY2="1.0" />
+</set>
