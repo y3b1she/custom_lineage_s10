@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://android.com" 
+     android:shareInterpolator="false">
+    
+    <!-- Плавное уменьшение: в iOS 18 нижний слой проседает совсем чуть-чуть (до 0.96-0.97) -->
+    <!-- Используется кривая (0.1, 1.0, 0.2, 1.0) для мгновенной реакции на закрытие -->
+    <scale 
+        android:fromXScale="1.0" 
+        android:toXScale="0.96" 
+        android:fromYScale="1.0" 
+        android:toYScale="0.96" 
+        android:pivotX="50.0%" 
+        android:pivotY="50.0%" 
+        android:duration="380" 
+        android:controlX1="0.1" 
+        android:controlY1="1.0" 
+        android:controlX2="0.2" 
+        android:controlY2="1.0" />
+        
+    <!-- Затухание: в iOS 18 прозрачность уходит мягче, глубина падения до 0.5 -->
+    <!-- Тайминг синхронизирован с масштабом для создания эффекта растворения в глубине -->
+    <alpha 
+        android:fromAlpha="1.0" 
+        android:toAlpha="0.5" 
+        android:duration="380" 
+        android:controlX1="0.1" 
+        android:controlY1="1.0" 
+        android:controlX2="0.2" 
+        android:controlY2="1.0" />
+</set>
