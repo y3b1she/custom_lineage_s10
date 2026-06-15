@@ -47,10 +47,15 @@ jobs:
 
     - name: Apply Custom Code Modifications
       run: |
+        # Принудительно создаем структуру папок, если repo sync их не создал
+        mkdir -p lineage/frameworks/base/packages/SystemUI/res/values
+        mkdir -p lineage/frameworks/base/core/res/res/anim
+        
         # Накатываем твои кастомные анимации и шторку
         cp -f custom_config/my_changes/dimens.xml lineage/frameworks/base/packages/SystemUI/res/values/dimens.xml
         cp -f custom_config/my_changes/activity_open_enter.xml lineage/frameworks/base/core/res/res/anim/activity_open_enter.xml
         cp -f custom_config/my_changes/activity_open_exit.xml lineage/frameworks/base/core/res/res/anim/activity_open_exit.xml
+
 
     - name: Start Build
       run: |
