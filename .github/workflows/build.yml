@@ -23,38 +23,21 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3 repo
 
-    - name: Create Custom Independent Manifest
+    - name: Initialize Repo via Local Manifest
       run: |
-        mkdir -p lineage/.repo
+        mkdir lineage && cd lineage
         
-        # Настраиваем Git профиль
+        # Настраиваем профиль Git
         git config --global user.email "build@lineage.org"
         git config --global user.name "Builder"
         
-        # Пишем свой собственный манифест со всеми нужными репозиториями напрямую
-        cat <<EOF > lineage/.repo/manifest.xml
-        <?xml version="1.0" encoding="UTF-8"?>
-        <manifest>
-          <remote name="github" fetch="https://github.com" review="screenshot" />
-          
-          <!-- Главная база Android 16 фреймворка и шторки -->
-          <project name="LineageOS/android_frameworks_base" path="frameworks/base" remote="github" revision="lineage-23.2" depth="1" />
-          <project name="LineageOS/android_build" path="build/make" remote="github" revision="lineage-23.2" depth="1" />
-          
-          <!-- Исходники железа для твоего Samsung Galaxy S10 (beyond1lte) -->
-          <project name="LineageOS/android_device_samsung_beyond1lte" path="device/samsung/beyond1lte" remote="github" revision="lineage-23.2" depth="1" />
-          <project name="LineageOS/android_device_samsung_exynos9820-common" path="device/samsung/exynos9820-common" remote="github" revision="lineage-23.2" depth="1" />
-          <project name="LineageOS/android_kernel_samsung_exynos9820" path="kernel/samsung/exynos9820" remote="github" revision="lineage-23.2" depth="1" />
-          <project name="TheMuppets/proprietary_vendor_samsung_beyond1lte" path="vendor/samsung/beyond1lte" remote="github" revision="lineage-23.2" depth="1" />
-          <project name="TheMuppets/proprietary_vendor_samsung_exynos9820-common" path="vendor/samsung/exynos9820-common" remote="github" revision="lineage-23.2" depth="1" />
-          <project name="LineageOS/android_hardware_samsung" path="hardware/samsung" remote="github" revision="lineage-23.2" depth="1" />
-        </manifest>
-        EOF
+        # Инициализируем repo, подсовывая ему твой личный манифест из папки конфигурации
+        repo init -u ../custom_config -m manifest.xml --git-lfs --depth=1 --no-repo-verify
 
     - name: Sync Source Code
       run: |
         cd lineage
-        # Запуск скачивания по нашему собственному манифесту
+        # Теперь утилита видит файлы инициализации и начнет скачивание кода
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Apply Custom Code Modifications
