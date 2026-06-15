@@ -23,22 +23,25 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y bc bison build-essential ccache curl flex g++-multilib gcc-multilib git gnupg gperf lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python3 repo
 
-    - name: Bypass Repo Init and Setup Manifests
+    - name: Create Custom Independent Manifest
       run: |
-        mkdir -p lineage/.repo/manifests
-        mkdir -p lineage/.repo/local_manifests
+        mkdir -p lineage/.repo
         
         # Настраиваем Git профиль
         git config --global user.email "build@lineage.org"
         git config --global user.name "Builder"
         
-        # Скачиваем главный манифест напрямую через curl, обходя баг repo init
-        curl -s https://githubusercontent.com > lineage/.repo/manifest.xml
-        
-        # Создаем манифест для твоего Samsung S10
-        cat <<EOF > lineage/.repo/local_manifests/beyond1lte.xml
+        # Пишем свой собственный манифест со всеми нужными репозиториями напрямую
+        cat <<EOF > lineage/.repo/manifest.xml
         <?xml version="1.0" encoding="UTF-8"?>
         <manifest>
+          <remote name="github" fetch="https://github.com" review="screenshot" />
+          
+          <!-- Главная база Android 16 фреймворка и шторки -->
+          <project name="LineageOS/android_frameworks_base" path="frameworks/base" remote="github" revision="lineage-23.2" depth="1" />
+          <project name="LineageOS/android_build" path="build/make" remote="github" revision="lineage-23.2" depth="1" />
+          
+          <!-- Исходники железа для твоего Samsung Galaxy S10 (beyond1lte) -->
           <project name="LineageOS/android_device_samsung_beyond1lte" path="device/samsung/beyond1lte" remote="github" revision="lineage-23.2" depth="1" />
           <project name="LineageOS/android_device_samsung_exynos9820-common" path="device/samsung/exynos9820-common" remote="github" revision="lineage-23.2" depth="1" />
           <project name="LineageOS/android_kernel_samsung_exynos9820" path="kernel/samsung/exynos9820" remote="github" revision="lineage-23.2" depth="1" />
@@ -51,12 +54,12 @@ jobs:
     - name: Sync Source Code
       run: |
         cd lineage
-        # Запускаем чистую синхронизацию. Теперь файлы на месте, и скрипт просто начнет качать код.
+        # Запуск скачивания по нашему собственному манифесту
         repo sync -c -j$(nproc --all) --force-sync --no-clone-bundle --no-tags
 
     - name: Apply Custom Code Modifications
       run: |
-        # Копируем твои идеальные файлы шторки и анимаций
+        # Подменяем файлы шторки и анимаций на твои кастомные
         cp -f custom_config/my_changes/dimens.xml lineage/frameworks/base/packages/SystemUI/res/values/dimens.xml
         cp -f custom_config/my_changes/activity_open_enter.xml lineage/frameworks/base/core/res/res/anim/activity_open_enter.xml
         cp -f custom_config/my_changes/activity_open_exit.xml lineage/frameworks/base/core/res/res/anim/activity_open_exit.xml
@@ -69,7 +72,7 @@ jobs:
         brunch beyond1lte
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/artifact@v4
       with:
         name: LineageOS-S10-Custom
         path: lineage/out/target/product/beyond1lte/*.zip
